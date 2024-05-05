@@ -4,7 +4,7 @@ use std::io::{self, BufRead, BufReader};
 pub fn read_file(path: &str) -> io::Result<Vec<(usize, usize)>> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    let mut lines = reader.lines();
+    let lines = reader.lines();
 
 
     // Reading the remaining lines to get the edges

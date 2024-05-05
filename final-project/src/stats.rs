@@ -1,17 +1,12 @@
-pub fn average(distances: Vec<&str>) -> f32 {
+use std::collections::HashMap;
+
+pub fn average(distances: HashMap<i32, i32>) -> f32 {
     let mut total = 0;
     let mut count = 0;
 
-    for data in distances {
-        let parts: Vec<&str> = data.split(':').collect();
-        if let Some(value_str) = parts.get(1) {
-            if let Ok(num) = value_str.trim().parse::<i32>() {
-                total += num;
-                count += 1;
-            } else {
-                println!("Warning: Failed to parse '{}'", value_str);
-            }
-        }
+    for data in distances.values() {
+        total += data;
+        count += 1;
     }
     if count == 0 {
         0.0 
@@ -20,44 +15,27 @@ pub fn average(distances: Vec<&str>) -> f32 {
     }
 }
 
-pub fn max_distance(distanes: Vec<&str>) -> Option<i32> {
-    let mut max_value: Option<i32> = None;
-
-    for data in distances {
-        let parts: Vec<&str> = data.split(':').collect();
-        if let Some(value_str) = parts.get(1) {
-            if let Ok(num) = value_str.trim().parse::<i32>() {
-                max_value = match max_value {
-                    Some(current_max) => Some(current_max.max(num)),
-                    None => Some(num),
-                };
-            } else {
-                println!("Warning: Failed to parse '{}'", value_str);
-            }
-        }
+pub fn max_distance(distances: HashMap<i32, i32>) -> i32 {
+    let mut values: Vec<i32> = Vec::new();
+    for data in distances.values() {
+        values.push(*data);
     }
-    max_value
+    values.sort_by(|a, b| b.cmp(a));
+    values[0]
 }
 
-pub fn find_threshold(distances: Vec<&str>) -> (usize, usize, usize) {
+pub fn find_threshold(distances: HashMap<i32, i32>) -> (usize, usize, usize) {
     let mut less_seven = 0;
     let mut less_fifteen = 0;
     let mut greater_fifteen = 0;
 
-    for data in distances {
-        let parts: Vec<&str> = data.split(':').collect();
-        if let Some(value_str) = parts.get(1) {
-            if let Ok(num) = value_str.trim().parse::<i32>() {
-                if num < 7 {
-                    less_seven += 1;
-                } else if num <= 15 {
-                    less_fifteen += 1;
-                } else {
-                    greater_fifteen += 1;
-                }
-            } else {
-                println!("Warning: Failed to parse '{}'", value_str);
-            }
+    for value in distances.values() {
+        if *value < 7 {
+            less_seven += 1;
+        } else if *value <= 15 {
+            less_fifteen += 1;
+        } else {
+            greater_fifteen += 1;
         }
     }
 
